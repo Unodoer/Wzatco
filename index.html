@@ -2,58 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UNODOER - Customer Support Bot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNODOER Support Bot</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
     body {
-      background: #f7f9fc;
-      color: #333;
-      text-align: center;
-      padding: 60px 20px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      color: #4a00e0;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 30px;
-    }
-    .button {
-      background-color: #4a00e0;
+      background: #0f172a;
       color: #fff;
-      padding: 12px 28px;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+    header {
+      background: #1e293b;
+      padding: 16px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    #chatbox {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      height: 75vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    .user {
+      background: #38bdf8;
+      color: #000;
+      align-self: flex-end;
+    }
+    .bot {
+      background: #334155;
+      color: #fff;
+      align-self: flex-start;
+    }
+    #inputArea {
+      display: flex;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px 20px;
+    }
+    #userInput {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px 0 0 8px;
       border: none;
-      border-radius: 8px;
       font-size: 1rem;
-      text-decoration: none;
+    }
+    #sendBtn {
+      padding: 12px 18px;
+      border: none;
+      background: #38bdf8;
+      color: #000;
+      font-weight: bold;
+      border-radius: 0 8px 8px 0;
       cursor: pointer;
-      transition: background 0.3s;
     }
-    .button:hover {
-      background-color: #3500b8;
-    }
-    footer {
-      margin-top: 50px;
-      font-size: 0.9rem;
-      color: #aaa;
+    #sendBtn:hover {
+      background: #0ea5e9;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to UNODOER.AI</h1>
-  <p>Your smart assistant for Wzatco projector customer & technical support.</p>
-  <a href="#" class="button">Launch Support Bot</a>
-  <footer>
-    &copy; 2025 UNODOER.AI. All rights reserved.
-  </footer>
+  <header>🤖 UNODOER Support Bot</header>
+  <div id="chatbox"></div>
+  <div id="inputArea">
+    <input type="text" id="userInput" placeholder="Type your question..." />
+    <button id="sendBtn" onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const input = document.getElementById("userInput");
+
+    const API_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEBAPP_URL_HERE";
+
+    function appendMessage(text, sender) {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.innerText = text;
+      chatbox.appendChild(div);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+      appendMessage(userMessage, "user");
+      input.value = "";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ message: userMessage }),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        appendMessage(data.reply || "No reply", "bot");
+      } catch (err) {
+        appendMessage("⚠️ Error reaching support bot.", "bot");
+      }
+    }
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
 </body>
 </html>
