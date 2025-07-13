@@ -9,8 +9,8 @@
       background: #0f172a;
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
-      padding: 0;
       margin: 0;
+      padding: 0;
     }
     header {
       background: #1e293b;
@@ -23,7 +23,7 @@
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
-      height: 75vh;
+      height: 70vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -33,6 +33,7 @@
       padding: 10px 15px;
       border-radius: 12px;
       max-width: 80%;
+      line-height: 1.4;
     }
     .user {
       background: #38bdf8;
@@ -47,8 +48,8 @@
     #inputArea {
       display: flex;
       max-width: 800px;
-      margin: 20px auto;
-      padding: 0 20px 20px;
+      margin: 10px auto 20px;
+      padding: 0 20px;
     }
     #userInput {
       flex: 1;
@@ -73,9 +74,11 @@
 </head>
 <body>
   <header>🤖 UNODOER Support Bot</header>
-  <div id="chatbox"></div>
+  <div id="chatbox">
+    <div class="message bot">Hi! I’m UNODOER Support Bot. How can I help you today?</div>
+  </div>
   <div id="inputArea">
-    <input type="text" id="userInput" placeholder="Type your question..." />
+    <input type="text" id="userInput" placeholder="Type your question..." autocomplete="off" />
     <button id="sendBtn" onclick="sendMessage()">Send</button>
   </div>
 
@@ -105,10 +108,12 @@
           body: JSON.stringify({ message: userMessage }),
           headers: { "Content-Type": "application/json" },
         });
+
         const data = await response.json();
-        appendMessage(data.reply || "No reply", "bot");
+        appendMessage(data.reply || "⚠️ No reply from bot", "bot");
       } catch (err) {
         appendMessage("⚠️ Error reaching support bot.", "bot");
+        console.error(err);
       }
     }
 
